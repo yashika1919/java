@@ -1,0 +1,55 @@
+public class MainActivity extends AppCompatActivity {
+
+    Button changeWallpaper; // Declares a Button variable named changeWallpaper.
+    Timer myTimer; // Declares a Timer variable named myTimer.
+    Drawable drawable; // Declares a Drawable variable named drawable.
+    WallpaperManager wpm; // Declares a WallpaperManager variable named wpm.
+    int prev = 1; // Declares an integer variable named prev and initializes it to 1.
+    
+    @Override
+    protected void onCreate(Bundle savedInstanceState) { // Overrides the onCreate method of AppCompatActivity.
+        super.onCreate(savedInstanceState); // Calls the onCreate method of the superclass.
+        setContentView(R.layout.activity_main); // Sets the content view to the layout defined in activity_main.xml.
+        
+        myTimer = new Timer(); // Initializes the myTimer variable with a new Timer object.
+        wpm = WallpaperManager.getInstance(this); // Initializes the wpm variable with the WallpaperManager instance.
+        changeWallpaper = findViewById(R.id.button); // Binds the changeWallpaper variable to the Button with the ID 'button'.
+        
+        changeWallpaper.setOnClickListener(new View.OnClickListener() { // Sets an OnClickListener on the changeWallpaper Button.
+            @Override
+            public void onClick(View view) {    // Overrides the onClick method of OnClickListener.
+                setWallpaper();    // Calls the setWallpaper method when the Button is clicked.
+            }
+        });
+    }
+}
+
+private void setWallpaper() { // Defines a private method named setWallpaper.
+    myTimer.schedule(new TimerTask() { // Schedules a new TimerTask using myTimer.
+        @Override
+        public void run() { // Overrides the run method of TimerTask.
+            if (prev == 1) { // Checks if the value of prev is 1.
+                drawable = getResources().getDrawable(R.drawable.wall1); // Sets drawable to the resource wall1.
+                prev = 2; // Sets prev to 2.
+            } else if (prev == 2) { // Checks if the value of prev is 2.
+                drawable = getResources().getDrawable(R.drawable.wall2); // Sets drawable to the resource wall2.
+                prev = 3; // Sets prev to 3.
+            } else if (prev == 3) { // Checks if the value of prev is 3.
+                drawable = getResources().getDrawable(R.drawable.wall31); // Sets drawable to the resource wall31.
+                prev = 4; // Sets prev to 4.
+            } else if (prev == 4) { // Checks if the value of prev is 4.
+                drawable = getResources().getDrawable(R.drawable.wall311); // Sets drawable to the resource wall311.
+                prev = 5; // Sets prev to 5.
+            } else if (prev == 5) { // Checks if the value of prev is 5.
+                drawable = getResources().getDrawable(R.drawable.wall5); // Sets drawable to the resource wall5.
+                prev = 1; // Sets prev to 1.
+            }
+            Bitmap wallpaper = ((BitmapDrawable) drawable).getBitmap(); // Converts drawable to a Bitmap.
+            try {
+                wpm.setBitmap(wallpaper); // Sets the wallpaper using the Bitmap.
+            } catch (IOException e) { // Catches any IOExceptions.
+                e.printStackTrace(); // Prints the stack trace of the exception.
+            }
+        }
+    }, 0, 30000); // Executes the TimerTask immediately, then every 30000 milliseconds (30 seconds).
+}

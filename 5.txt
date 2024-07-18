@@ -1,0 +1,39 @@
+public class MainActivity extends AppCompatActivity { // The MainActivity class inherits from AppCompatActivity
+   Button btnStart, btnStop; // Declare buttons for starting and stopping the counter
+   TextView textCounter; // Declare a TextView to display the counter
+   int i = 1; // Initialize the counter variable 'i' to 1
+   Handler customHandler = new Handler(); // Create a Handler instance to handle delayed execution of code
+
+   @Override
+   protected void onCreate(Bundle savedInstanceState) { // The onCreate method is called when the activity is first created
+        super.onCreate(savedInstanceState); // Call the superclass's onCreate method to perform default initialization
+        EdgeToEdge.enable(this); // Enable edge-to-edge display for this activity
+        setContentView(R.layout.activity_main); // Set the layout for the activity from the activity_main.xml file
+        btnStart = findViewById(R.id.btnstart); // Find and assign the start button from the layout
+        btnStop = findViewById(R.id.btnstop); // Find and assign the stop button from the layout
+        textCounter = findViewById(R.id.textView); // Find and assign the TextView from the layout
+
+        btnStart.setOnClickListener(new View.OnClickListener() { // Set an OnClickListener for the start button
+            @Override
+            public void onClick(View view) { // Define the action to be taken when the start button is clicked
+                customHandler.postDelayed(updateTimerThread, 0); // Start the counter immediately by posting the Runnable with no delay
+            }
+        });
+
+        btnStop.setOnClickListener(new View.OnClickListener() { // Set an OnClickListener for the stop button
+            @Override
+            public void onClick(View view) { // Define the action to be taken when the stop button is clicked
+                customHandler.removeCallbacks(updateTimerThread); // Stop the counter by removing the Runnable callbacks
+            }
+        });
+    }
+
+    private final Runnable updateTimerThread = new Runnable() { // Define a Runnable to update the counter
+        @Override
+        public void run() { // The run method contains the code to be executed
+            textCounter.setText("" + i); // Update the TextView with the current value of 'i'
+            customHandler.postDelayed(this, 1000); // Schedule the Runnable to be executed again after 1 second
+            i++; // Increment the counter variable 'i'
+        }
+    };
+}
