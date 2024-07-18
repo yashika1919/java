@@ -1,0 +1,53 @@
+public class MainActivity extends AppCompatActivity {
+    // Declare UI components
+    EditText editText;     // An input field where the user can enter text, in this case, a phone number.
+    Button clrBtn, callBtn, saveBtn;    // Buttons for clearing the input field, initiating a call, and saving the phone number to contacts, respectively.
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_main);
+         // Initialize UI components by finding them by their ID from the layout
+        editText = findViewById(R.id.editTextPhone);  // Find the EditText view by its ID and assign it to the editText variable
+        clrBtn = findViewById(R.id.button);  // Find the clear button by its ID and assign it to the clrBtn variable
+        callBtn = findViewById(R.id.btncall);  // Find the call button by its ID and assign it to the callBtn variable
+        saveBtn = findViewById(R.id.btnsave);  // Find the save button by its ID and assign it to the saveBtn variable
+
+
+  clrBtn.setOnClickListener(new View.OnClickListener()  // Set an OnClickListener for the clear button
+ {   
+            @Override
+            public void onClick(View view) {  // Override the onClick method to define what happens when the button is clicked
+         editText.setText(" ");  // Set the text of the EditText field to a single space, effectively clearing it
+            }
+                 });
+       callBtn.setOnClickListener(new View.OnClickListener() {  // Set an OnClickListener for the call button {
+            @Override
+             public void onClick(View view) {  // Override the onClick method to define what happens when the button is clicked
+                String number = editText.getText().toString();  // Get the phone number from the EditText field as a string
+                Intent intent = new Intent(Intent.ACTION_DIAL);  // Create a new intent with the action to dial a number
+                intent.setData(Uri.parse("tel:" + number));  // Set the data for the intent as a URI with the phone number
+                startActivity(intent);  // Start the activity to handle the intent (the phone dialer)
+            }
+            }
+        });
+
+saveBtn.setOnClickListener(new View.OnClickListener() {  // Set an OnClickListener for the save button          
+  @Override
+            public void onClick(View v) {  // Override the onClick method to define what happens when the button is clicked
+                String number = editText.getText().toString();  // Get the phone number from the EditText field as a string
+                Intent intent = new Intent(Intent.ACTION_INSERT, Contacts.CONTENT_URI);  // Create a new intent to insert a contact with the provided URI
+                intent.putExtra(ContactsContract.Intents.Insert.PHONE, number);  // Put the phone number into the intent as an extra
+                startActivity(intent);  // Start the activity to handle the intent (the contacts app)
+            }
+        });
+    }
+
+    public void inputNumber(View view){  // Method to handle number input from buttons
+
+        Button btn = (Button) view;  // Cast the clicked view to a Button
+        String digit = btn.getText().toString();  // Get the text (digit) from the button
+        String phoneNumber = editText.getText().toString();  // Get the current phone number from the EditText field
+        editText.setText(phoneNumber + digit);  // Append the digit to the current phone number and set it in the EditText field
+    }
+}
